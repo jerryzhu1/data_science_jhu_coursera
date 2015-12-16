@@ -39,7 +39,7 @@ sum(dat$Zip*dat$Ext,na.rm=T)
 ```
 (original data source: http://catalog.data.gov/dataset/natural-gas-acquisition-program)
 
-```{r}
+```{r,results='asis'}
 library(xlsx)
 download.file('https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx','./Q3.xlsx','curl')
 dat = read.xlsx('./Q3.xlsx',1,rowIndex = 18:23,colIndex = 7:15,header = TRUE)
@@ -54,7 +54,7 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml
 ```
 How many restaurants have zipcode 21231?
 
-```{r}
+```{r,results='asis'}
 library(XML)
 doc <-  xmlTreeParse("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml",useInternal = TRUE)
 rootnode <- xmlRoot(doc)
@@ -77,7 +77,7 @@ pwgtp15
 ```
 broken down by sex using the data.table package?
 
-```{r}
+```{r,results='asis'}
 library(data.table)
 download.file('https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv','./Q5.csv','curl')
 print(date())
