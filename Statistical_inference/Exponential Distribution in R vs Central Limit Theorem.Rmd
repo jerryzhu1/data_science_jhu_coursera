@@ -41,6 +41,8 @@ ggplot(means, aes(x = mean)) +
         labs(title="Distribution of Sample Means", x="Means", y="Density")
 ```
 
+![1-1](./1-1.png)
+
 It seems the mean of this distribution is around 5, let's check it out!
 
 ##Sample mean & theoretical mean
@@ -81,7 +83,7 @@ ggplot(means, aes(x = mean)) +
         stat_function(fun = dnorm, arg = list(mean = m_t , sd = sqrt(v_s)), colour = "red", size = 1) + 
         labs(title = "Distribution of Sample Means & Normal Distribution", x = "Means", y = "Density")
 ```
-
+![1-2](./1-2.png) 
 According to the graph above, the distribution of the simulate mean is approaching a normal distribution! 
 
 
