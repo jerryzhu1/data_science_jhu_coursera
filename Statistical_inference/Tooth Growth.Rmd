@@ -29,6 +29,7 @@ ggplot(ToothGrowth, aes(x = factor(dose), y = len, fill = supp)) +
         geom_boxplot() +
         labs(x = "Dosage", y = "Length of Teeth", title = "Exploratory Data Analyses")
 ```
+![2-1](./2-1.png) 
 
 ##Basic summary
 ```{r}
