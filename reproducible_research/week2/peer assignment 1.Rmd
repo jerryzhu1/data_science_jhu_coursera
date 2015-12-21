@@ -35,7 +35,7 @@ step_sum <- aggregate(data$steps, by=list(data$date), sum, na.rm=TRUE)
 ggplot(data = step_sum, aes(x = step_sum$x)) + geom_histogram(binwidth = 2000, fill = 'steelblue', col = 'black') + labs(x = 'Total steps', y = 'Frequency', title = 'Total steps per day')
 ```
 
-3.Calculate and report the mean and median of the total number of steps taken per day
+3. Calculate and report the mean and median of the total number of steps taken per day
 ```{r}
 mean(step_sum$x)
 median(step_sum$x)
