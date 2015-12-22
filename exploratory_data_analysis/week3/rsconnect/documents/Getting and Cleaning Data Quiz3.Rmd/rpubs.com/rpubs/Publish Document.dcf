@@ -1,0 +1,7 @@
+name: Publish Document
+account: rpubs
+server: rpubs.com
+bundleId:
+        https://api.rpubs.com/api/v1/document/136354/87c96c3ac4954ce2bd24d91be009ceab
+url: http://rpubs.com/Jerry_zhu/136354
+when: 1450770705.92678
