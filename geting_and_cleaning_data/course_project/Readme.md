@@ -74,7 +74,7 @@ activity.labels <- read.table('./UCI HAR Dataset/activity_labels.txt', header = 
 activity.labels <- as.character(activity.labels[,2])
 data.sub$activity <- activity.labels[data.sub$activity]
 ```
-Replacing numeric labels of activity in column 2 of the data frame (from 1 to 6) by descriptive strings which come from the file activity_labels.txt. 
+Replacing numeric labels of activity in column 2 of the data frame (from 1 to 6) by descriptive strings which come from the file **activity_labels.txt**. 
 
 ### Appropriately labels the data set with descriptive variable names
 ```{r}
