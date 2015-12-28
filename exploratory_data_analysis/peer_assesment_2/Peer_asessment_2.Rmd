@@ -28,7 +28,7 @@ Emissions.total <- aggregate(NEI$Emissions, list(year = NEI$year), sum)
 names(Emissions.total) <- c('year', 'Emissions')
 barplot(Emissions.total$Emissions/1000, names.arg =  Emissions.total$year, xlab = 'Year', ylab = 'Emission(kilotons)', main =  'Total emissions from 1999 to 2008', col = 'steelblue')
 ```
-
+![figure1](./plot1.png) 
 #### Answer: 
 Yes. As we can see from plot1, emissions decreased in the United States from 1999 to 2008.
 
@@ -41,7 +41,7 @@ Bal.total <- aggregate(Bal$Emissions, list(year = Bal$year), sum)
 names(Bal.total) <- c('year', 'Emissions')
 barplot(Bal.total$Emissions/1000, names.arg =  Bal.total$year, xlab = 'Year', ylab = 'Emission(kilotons)', main =  'Total emissions in Baltimore City from 1999 to 2008', col = 'steelblue')
 ```
-
+![figure2](./plot2.png) 
 #### Answer: 
 Emissions decreased on 2008 compared with 1999, although emissions increased from 2002 to 2005.
 
@@ -54,7 +54,7 @@ Bal.type <- aggregate(Bal$Emissions, list(type = Bal$type, year = Bal$year), sum
 names(Bal.type) <- c('Type', 'Year', 'Emissions')
 ggplot(data = Bal.type, aes(x = Year, y = Emissions, fill = Type)) + geom_histogram(stat = 'identity')+ facet_grid(.~Type) 
 ```
-
+![figure3](./plot3.png) 
 #### Answer: 
 Non-road, nonpoint and on-road decreased from 1999 to 2008.
 
@@ -73,6 +73,7 @@ png(filename = "plot4.png")
 ggplot(data = US.relate.sum, aes(x = Year, y = Emissions)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Emissions from coal combustion-related sources') 
 dev.off() 
 ```
+![figure4](./plot4.png) 
 
 #### Answer: 
 Emissions from coal combustion-related decreased from 1999 to 2008 across the US.
@@ -90,6 +91,7 @@ Bal.relate.sum <- aggregate(Bal.relate$Emissions, list(year = Bal.relate$year), 
 names(Bal.relate.sum) <- c('Year', 'Emissions')
 ggplot(data = Bal.relate.sum, aes(x = Year, y = Emissions)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Emissions from motor vehicle sources in Baltimore City') 
 ```
+![figure5](./plot5.png) 
 
 #### Answer: 
 Emissions from motor vehicle sources decreased from 1999–2008 in Baltimore City.
@@ -107,6 +109,7 @@ names(Bal_los.motor.sum) <- c('Year', 'fips', 'Emissions')
 Bal_los.motor.sum$fips <- ifelse(Bal_los.motor.sum$fips == '06037', 'Los Angeles','Baltimore')
 ggplot(data = Bal_los.motor.sum, aes(x = Year, y = Emissions)) + facet_grid(.~fips) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Emissions from motor vehicle sources in Baltimore City') 
 ```
+![figure6](./plot6.png) 
 
 #### Answer: 
 Los Angeles have larger volume of PM2.5 emissions from motor vehicle sources than Baltimore. Therefore, Los Angeles has seen greater changes over time in motor vehicle emissions.
