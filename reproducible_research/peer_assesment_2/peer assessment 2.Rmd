@@ -136,6 +136,7 @@ plot.1 = ggplot(FATALITIES.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(s
 plot.2 = ggplot(INJURIES.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Injuries of each evtype')
 grid.arrange(plot.1, plot.2, nrow = 2)
 ```
+![figure1](./plot1.png)
 
 We use **FATALITIES** and **INJURIES** represent population health condition. As we can see from the figure, **Tornade** have largest effect on population health.
 
@@ -150,5 +151,6 @@ plot.3 = ggplot(prop.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 
 plot.4 = ggplot(crop.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Cropdmg of each evtype')
 grid.arrange(plot.3, plot.4, nrow = 2)
 ```
+![figure2](./plot2.png)
 
 According to the figure above, **Tornado** have the largest damage on public property. **Drought** and **Flood** have the largest and second large responsbility for the damage on corp. 
