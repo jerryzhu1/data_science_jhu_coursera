@@ -1,0 +1,154 @@
+---
+title: "Analysis the effect of sever wearher on population health and economic"
+author: "Siqi Zhu"
+date: "December 23, 2015"
+output: html_document
+---
+
+### Synopsis
+Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern.This project involves exploring the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. And try to figure out which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health, and which types of events have the greatest economic consequences.
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(plyr)
+require(gridExtra)
+```
+
+### Data Processing
+
+Import data from internet, read and clean data before analysis.
+
+```{r,cache=TRUE}
+fileurl = 'http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2'
+dest = "/Users/zhusiqi/Desktop/coursera/R_jhu/reproducible_research/peer_assesment_2/StormData.csv.bz2"
+if(!file.exists(dest)){
+  download.file(fileurl, dest)
+}
+data.raw = read.csv(bzfile(dest))
+head(data.raw, 3)
+```
+
+```{r, cache=TRUE}
+data = data.raw[,c("EVTYPE","FATALITIES","INJURIES","PROPDMG","PROPDMGEXP","CROPDMG","CROPDMGEXP")]
+data$EVTYPE <- tolower(data$EVTYPE)
+data$EVTYPE[grepl("*astronomical low tide*", data$EVTYPE)] <- "Astronomical Low Tide"
+data$EVTYPE[grepl("*avalanc(h)?e*", data$EVTYPE)] <- "Avalanche"
+data$EVTYPE[grepl("*blizzard*", data$EVTYPE)] <- "Blizzard"
+data$EVTYPE[grepl("*coastal flood*", data$EVTYPE)] <- "Coastal Flood"
+data$EVTYPE[grepl("*cold/wind chill*", data$EVTYPE)] <- "Cold/Wind Chill"
+data$EVTYPE[grepl("*debris flow*|mud( )?slide*|*landslide*|*rock slide*", data$EVTYPE)] <- "Debris Flow"
+data$EVTYPE[grepl("*(dense )?fog*", data$EVTYPE)] <- "Dense Fog"
+data$EVTYPE[grepl("*dense smoke*", data$EVTYPE)] <- "Dense Smoke"
+data$EVTYPE[grepl("*drought*", data$EVTYPE)] <- "Drought"
+data$EVTYPE[grepl("*dust devil*", data$EVTYPE)] <- "Dust Devil"
+data$EVTYPE[grepl("*dust storm*", data$EVTYPE)] <- "Dust Storm"
+data$EVTYPE[grepl("*excessive heat*|*extreme heat*", data$EVTYPE)] <- "Excessive Heat"
+data$EVTYPE[grepl("*extreme cold/wind chill*", data$EVTYPE)] <- "Extreme Cold/Wind Chill"
+data$EVTYPE[grepl("*flash flood*|*flash/flood*|*flood/flash*|*flashflood*|*flood flash*", data$EVTYPE)] <- "Flash Flood"
+data$EVTYPE[grepl("*lakeshore flood*", data$EVTYPE)] <- "Lakeshore Flood"
+data$EVTYPE[grepl("*flood*", data$EVTYPE)] <- "Flood"
+data$EVTYPE[grepl("*frost*|*frost/freeze*|*freeze*", data$EVTYPE)] <- "Frost/Freeze"
+data$EVTYPE[grepl("*funnel cloud*", data$EVTYPE)] <- "Funnel Cloud"
+data$EVTYPE[grepl("*freezing fog*", data$EVTYPE)] <- "Freezing Fog"
+data$EVTYPE[grepl("*marine hail*", data$EVTYPE)] <- "Marine Hail"
+data$EVTYPE[grepl("*hail*", data$EVTYPE)] <- "Hail"
+data$EVTYPE[grepl("*heat*", data$EVTYPE)] <- "Heat"
+data$EVTYPE[grepl("*heavy rain*", data$EVTYPE)] <- "Heavy Rain"
+data$EVTYPE[grepl("*heavy snow*", data$EVTYPE)] <- "Heavy Snow"
+data$EVTYPE[grepl("*high surf*|*high seas*|*high waves*|*high swells*|*rough seas*|*rough surf*", data$EVTYPE)] <- "High Surf"
+data$EVTYPE[grepl("*marine high wind*", data$EVTYPE)] <- "Marine High Wind"
+data$EVTYPE[grepl("*high wind*", data$EVTYPE)] <- "High Wind"
+data$EVTYPE[grepl("*hurricane*|*typhoon*", data$EVTYPE)] <- "Hurricane (Typhoon)"
+data$EVTYPE[grepl("*ice storm*", data$EVTYPE)] <- "Ice Storm"
+data$EVTYPE[grepl("*lake effect snow*", data$EVTYPE)] <- "Lake-Effect Snow"
+data$EVTYPE[grepl("*lig(h)?t(n)?ing*", data$EVTYPE)] <- "Lightning"
+data$EVTYPE[grepl("*marine strong wind*", data$EVTYPE)] <- "Marine Strong Wind"
+data$EVTYPE[grepl("*marine thunderstorm wind*", data$EVTYPE)] <- "Marine Thunderstorm Wind"
+data$EVTYPE[grepl("*rip current*", data$EVTYPE)] <- "Rip Current"
+data$EVTYPE[grepl("*seiche*", data$EVTYPE)] <- "Seiche"
+data$EVTYPE[grepl("*sleet*", data$EVTYPE)] <- "Sleet"
+data$EVTYPE[grepl("*storm surge/tide*|*storm surge*", data$EVTYPE)] <- "Storm Surge/Tide"
+data$EVTYPE[grepl("*strong wind*", data$EVTYPE)] <- "Strong Wind"
+data$EVTYPE[grepl("*t(h)?u(n)?(d)?e(e)?r(e)?(s)?torm*|*tstm*|*thunderstrom*", data$EVTYPE)] <- "Thunderstorm Wind"
+data$EVTYPE[grepl("*torn(a)?do*", data$EVTYPE)] <- "Tornado"
+data$EVTYPE[grepl("*tropical depression*", data$EVTYPE)] <- "Tropical Depression"
+data$EVTYPE[grepl("*tropical storm*", data$EVTYPE)] <- "Tropical Storm"
+data$EVTYPE[grepl("*tsunami*", data$EVTYPE)] <- "Tsunami"
+data$EVTYPE[grepl("*volcanic ash*", data$EVTYPE)] <- "Volcanic Ash"
+data$EVTYPE[grepl("*waterspout*", data$EVTYPE)] <- "Waterspout"
+data$EVTYPE[grepl("*wild( )?fire*|*wild/forest fire*|*brush fire*|*forest fire*", data$EVTYPE)] <- "Wildfire"
+data$EVTYPE[grepl("*winter storm*", data$EVTYPE)] <- "Winter Storm"
+data$EVTYPE[grepl("*winter weather*", data$EVTYPE)] <- "Winter Weather"
+```
+
+
+
+```{r}
+# Caululate the sum of events and group according to the types of events.
+data.sort = function(name, data.new = data, top = 5){
+        data.new = subset(data.new, name > 0)
+        col.num = which(colnames(data.new) == name)
+        data.new = aggregate(data.new[,col.num], by=list(data.new$EVTYPE), FUN = "sum")
+        data.new = arrange(data.new, data.new[,2], decreasing = TRUE)
+        data.new = head(data.new, top)
+        colnames(data.new) = c('EVTYPE', 'COUNT')
+        data.new = within(data.new, EVTYPE  <-  factor(x = EVTYPE, levels = data.new$EVTYPE))
+        return(data.new)
+}
+
+# Calculate total number of PROPDMG and CROPDMG.
+data.total <- function(name, data.new = data){
+        col.num <- which(colnames(data.new) == name)
+        data.new[, col.num] <- as.character(data.new[, col.num])
+        data.new[toupper(data.new[, col.num]) == "B", col.num] <- "9"
+        data.new[toupper(data.new[, col.num]) == "M", col.num] <- "6"
+        data.new[toupper(data.new[, col.num]) == "K", col.num] <- "3"
+        data.new[toupper(data.new[, col.num]) == "H", col.num] <- "2"
+        data.new[data.new[, col.num] == "", col.num] <- "0"
+        data.new[, col.num] <- as.numeric(data.new[, col.num])
+        data.new[is.na(data.new[, col.num]), col.num] <- 0
+        if (name == 'PROPDMGEXP'){
+                data.new$PROPDMG.total = data.new$PROPDMG * 10 ^ data.new$PROPDMGEXP
+                total = data.new[, colnames(data.new) == 'PROPDMG.total']
+                result = cbind(data.new['EVTYPE'], total)
+                return(result)
+        }
+        if (name == 'CROPDMGEXP'){
+                data.new$CROPDMG.total = data.new$CROPDMG * 10 ^ data.new$CROPDMGEXP
+                total = data.new[, colnames(data.new) == 'CROPDMG.total']
+                result = cbind(data.new['EVTYPE'], total)
+                return(result)
+        }
+}
+```
+
+
+
+### Results
+
+#### Question 1: Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+```{r, message=FALSE}
+FATALITIES.count = data.sort('FATALITIES')
+INJURIES.count = data.sort('INJURIES')
+plot.1 = ggplot(FATALITIES.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Fatalities of each evtype')
+plot.2 = ggplot(INJURIES.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Injuries of each evtype')
+grid.arrange(plot.1, plot.2, nrow = 2)
+```
+
+We use **FATALITIES** and **INJURIES** represent population health condition. As we can see from the figure, **Tornade** have largest effect on population health.
+
+#### Question 2: Across the United States, which types of events have the greatest economic consequences?
+
+```{r, message=FALSE}
+prop = data.total('PROPDMGEXP')
+crop = data.total('CROPDMGEXP')
+prop.count = data.sort('total', prop, 5)
+crop.count = data.sort('total', crop, 5)
+plot.3 = ggplot(prop.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Propdmg of each evtype')
+plot.4 = ggplot(crop.count, aes(x = EVTYPE, y = COUNT)) + geom_histogram(stat = 'identity', fill = 'steelblue') + labs(title = 'Cropdmg of each evtype')
+grid.arrange(plot.3, plot.4, nrow = 2)
+```
+
+According to the figure above, **Tornado** have the largest damage on public property. **Drought** and **Flood** have the largest and second large responsbility for the damage on corp. 
