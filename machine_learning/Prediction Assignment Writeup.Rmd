@@ -1,0 +1,65 @@
+---
+title: "Prediction Assignment Writeup"
+author: "Siqi Zhu"
+date: "January 31, 2016"
+output: html_document
+---
+##Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+##Data
+
+The training data for this project are available here:
+```
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+```
+The test data are available here:
+```
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+```
+
+##Data Process
+
+Import and clean training and testing dataset.
+
+```{r, cache=TRUE}
+library(caret)
+library(randomForest)
+set.seed(920815)
+train_data = read.csv("pml-training.csv")
+test_data = read.csv("pml-testing.csv")
+
+train_raw = subset (train_data ,select = -X: -num_window)
+test_raw = subset (test_data ,select = -X: -num_window)
+train_raw = train_raw[, sapply(train_raw, function(x) !any(is.na(x)))]
+train_raw = train_raw[, sapply(train_raw, function(x) !any(x==""))]
+test_raw = test_raw[, sapply(test_raw, function(x) !any(is.na(x)))]
+```
+
+##Data Analysis
+
+Build a classification model with randmforest and apply the model to validation dataset to test the accuracy.
+
+```{r, cache=TRUE}
+#Select 60% of data from train_raw data as training set, 40% as validation set
+inTrain = createDataPartition(train_raw$classe, p = .6)[[1]]
+train = train_raw[inTrain, ]
+vali = train_raw[-inTrain, ]
+
+#Build clasification model with randomforest, and compare the prediction of model with real result in validation set
+predictor = train[, -53]
+true_result = train[, 53]
+rf_model = randomForest(predictor, true_result)
+prediction_train = predict(rf_model, vali)
+confusionMatrix(vali$classe,prediction_train)
+prediction_test = predict(rf_model, test_raw)
+```
+
+As we can see above, the accuracy in valiation dataset in more than 99%, which is a good news!
+
+##Predict the data in testset
+```{r, cache=TRUE}
+print(prediction_test)
+```
+The output above are our predictions for testset.
